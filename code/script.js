@@ -1,5 +1,10 @@
 const currentWeather = document.getElementById("current-weather");
 const forecast = document.getElementById("forecast");
+const body = document.querySelector("body");
+const formBtn = document.getElementById("form-btn");
+const cityDropdown = document.getElementById("city-dropdown");
+const main = document.getElementById("main");
+const geolocationBtn = document.getElementById("geolocation-btn");
 
 //Geolocation
 const options = {
@@ -12,25 +17,17 @@ const success = (pos) => {
   const crd = pos.coords;
   let latitude = crd.latitude;
   let longitude = crd.longitude;
-  console.log("Your current position is:");
-  console.log(`Latitude : ${crd.latitude}`);
-  console.log(`Longitude: ${crd.longitude}`);
-  console.log(`More or less ${crd.accuracy} meters.`);
-  console.log(latitude, longitude);
-  return (
-    getCurrentWeatherData(latitude, longitude),
-    getForecastWeatherData(latitude, longitude)
-  );
+  console.log(crd);
+  let cityName = `lat=${latitude}&lon=${longitude}`;
+  return getCurrentWeatherData(cityName), getForecastWeatherData(cityName);
 };
 
 const error = (err) => {
   console.warn(`ERROR(${err.code}): ${err.message}`);
   let latitude = 59.334591;
   let longitude = 18.06324;
-  return (
-    getCurrentWeatherData(latitude, longitude),
-    getForecastWeatherData(latitude, longitude)
-  );
+  let cityName = `lat=${latitude}&lon=${longitude}`;
+  return getCurrentWeatherData(cityName), getForecastWeatherData(cityName);
 };
 
 navigator.geolocation.getCurrentPosition(success, error, options);
@@ -52,9 +49,62 @@ const createImage = (className, src, alt, appendTo) => {
   appendTo.appendChild(newElement);
 };
 
+// Background images
+const weatherTypes = [
+  "Thunderstorm",
+  "Rain",
+  "Snow",
+  "Mist",
+  "Haze",
+  "Fog",
+  "Clear",
+  "Clouds",
+  "Smoke",
+];
+
+const changeBackgroundPicture = (weatherTypeJson) => {
+  weatherTypes.forEach((weatherType) => {
+    if (weatherType === weatherTypeJson) {
+      createImage(
+        "background-img",
+        `images/${weatherType}-background.jpg`,
+        weatherType,
+        body
+      );
+    }
+  });
+};
+
+// populate city dropdown
+let cityList = [
+  "Stockholm",
+  "Paris",
+  "Oslo",
+  "Berlin",
+  "Budapest",
+  "Barcelona",
+  "Kuala Lumpur",
+  "Mumbai",
+  "Beijing",
+  "Tokyo",
+];
+
+cityList.forEach((city) => {
+  let newOption = new Option(city, city);
+  cityDropdown.add(newOption, city);
+});
+
 // current weather details
-const getCurrentWeatherData = (latitude, longitude) => {
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=f60c361b4571fb70c85f29bbd856c13f`;
+
+const getCurrentWeatherData = (cityName) => {
+  const url = `https://api.openweathermap.org/data/2.5/weather?${cityName}&units=metric&appid=f60c361b4571fb70c85f29bbd856c13f`;
+
+  currentWeather.textContent = "";
+
+  if (!cityName) {
+    cityName = "q=Stockholm";
+  }
+
   fetch(url)
     .then((response) => {
       return response.json();
@@ -62,16 +112,28 @@ const getCurrentWeatherData = (latitude, longitude) => {
     .then((data) => {
       console.log(data);
 
+      createImage(
+        "big-icon",
+        `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+        data.weather[0].description,
+        currentWeather
+      );
       createElement(
         "h1",
         "temperature",
         "temperature",
-        `${data.main.temp} °C`,
+        `${Math.round(data.main.temp)}°C`,
         currentWeather
       );
-      createElement("h2", "city", "city", data.name, currentWeather);
       createElement(
-        "div",
+        "h2",
+        "city",
+        "city",
+        data.name.toUpperCase(),
+        currentWeather
+      );
+      createElement(
+        "h3",
         "weather-type",
         "weather-type",
         data.weather[0].description,
@@ -84,6 +146,7 @@ const getCurrentWeatherData = (latitude, longitude) => {
         "",
         currentWeather
       );
+
       const sunriseSunset = document.getElementById("sunrise-sunset");
       createElement(
         "div",
@@ -105,63 +168,78 @@ const getCurrentWeatherData = (latitude, longitude) => {
         })}`,
         sunriseSunset
       );
+      changeBackgroundPicture(data.weather[0].main);
+      // changeBackgroundPicture("Mist");
     });
 };
-getCurrentWeatherData();
 
-//forecast
-const getForecastWeatherData = (latitude, longitude) => {
-  const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=f60c361b4571fb70c85f29bbd856c13f`;
+// forecast
+const getForecastWeatherData = (cityName) => {
+  forecast.textContent = "";
+  if (!cityName) {
+    cityName = "q=Stockholm";
+  }
+  const url = `https://api.openweathermap.org/data/2.5/forecast?${cityName}&units=metric&appid=f60c361b4571fb70c85f29bbd856c13f`;
   fetch(url)
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
-
       const filteredList = data.list.filter((element) => {
         return (
           new Date(element["dt_txt"]).getHours() === 9 &&
           new Date(element["dt_txt"]).getDay() !== new Date(Date.now()).getDay()
         );
       });
-      console.log(filteredList);
 
       filteredList.forEach((element) => {
         createElement(
           "div",
-          "day",
+          "day form-styling",
           `day${filteredList.indexOf(element)}`,
           "",
           forecast
         );
 
-        let objectElement = document.getElementById(
+        let dayRow = document.getElementById(
           `day${filteredList.indexOf(element)}`
         );
         //day of the week
         const date = new Date(element["dt_txt"]);
+
         const getDayName = new Intl.DateTimeFormat("en-US", {
           weekday: "short",
         }).format(date);
-
-        createElement("p", "", "", getDayName, objectElement),
+        createElement("p", "day-name", "", getDayName, dayRow),
           // img
           createImage(
             "forecast-img",
             `http://openweathermap.org/img/wn/${element.weather[0].icon}@2x.png`,
             element.weather[0].main,
-            objectElement
+            dayRow
           );
         //temp
         createElement(
           "p",
+          "day-temp",
           "",
-          "",
-          `${element.main["temp_max"]} °C / ${element.main["temp_min"]} °C`,
-          objectElement
+          `${Math.round(element.main.temp)} °C`,
+          dayRow
         );
       });
     });
 };
-getForecastWeatherData();
+
+// eventlistener for city selection
+cityDropdown.addEventListener("change", () => {
+  const selectedCity = cityDropdown.options[cityDropdown.selectedIndex].value;
+  console.log(selectedCity);
+  cityName = `q=${selectedCity}`;
+
+  getCurrentWeatherData(cityName);
+  getForecastWeatherData(cityName);
+});
+
+geolocationBtn.addEventListener("click", () => {
+  navigator.geolocation.getCurrentPosition(success, error, options);
+});
