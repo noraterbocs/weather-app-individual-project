@@ -114,7 +114,7 @@ const getCurrentWeatherData = (cityName) => {
 
       createImage(
         "big-icon",
-        `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+        `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
         data.weather[0].description,
         currentWeather
       );
@@ -214,7 +214,7 @@ const getForecastWeatherData = (cityName) => {
           // img
           createImage(
             "forecast-img",
-            `http://openweathermap.org/img/wn/${element.weather[0].icon}@2x.png`,
+            `https://openweathermap.org/img/wn/${element.weather[0].icon}@2x.png`,
             element.weather[0].main,
             dayRow
           );
