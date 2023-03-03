@@ -3,13 +3,14 @@
 This project was initially a pair project, but I have decided to take it further and customize it more on my own.
 The main goal of this project was to learn how to work on separate branches, how to fetch api and use the retrieved data from the json.
 
-The following images have been used:
-Photo by Ryan Klaus: https://www.pexels.com/photo/light-flight-dawn-landscape-13397655/
-Photo by Miguel Á. Padriñán: https://www.pexels.com/photo/two-white-message-balloons-1111368/
-Photo by Jill Wellington: https://www.pexels.com/photo/red-and-gray-rain-boots-near-pink-umbrella-34519/
-Photo by Anna Shvets: https://www.pexels.com/photo/pills-fixed-as-question-mark-sign-3683053/
-Photo by Moose Photos: https://www.pexels.com/photo/gray-double-bell-clock-1037993/
-Photo by Madison Inouye: https://www.pexels.com/photo/self-care-isn-t-selfish-signage-2821823/
+Reference for images:
+Map icons created by Freepik - Flaticon
+Photo by Ryan Millier: https://www.pexels.com/photo/person-wearing-black-jacket-using-black-umbrella-3229623/
+Photo by Nicolás Jaramillo: https://www.pexels.com/photo/worm-s-eye-view-photography-of-buildings-1272541/
+Photo by Simon Berger: https://www.pexels.com/photo/road-between-trees-3408552/
+Photo by Pixabay: https://www.pexels.com/photo/city-lit-up-at-night-258173/
+Photo by Valdemaras D.: https://www.pexels.com/photo/person-on-mountain-1647972/
+Photo by Dave Haas: https://www.pexels.com/photo/bicycle-on-snow-covered-street-953626/
 
 ## The problem
 
