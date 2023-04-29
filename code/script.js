@@ -169,7 +169,6 @@ const getCurrentWeatherData = (cityName) => {
         sunriseSunset
       );
       changeBackgroundPicture(data.weather[0].main);
-      // changeBackgroundPicture("Mist");
     });
 };
 
