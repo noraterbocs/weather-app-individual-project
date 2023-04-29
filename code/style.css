@@ -39,7 +39,6 @@ main {
     align-items: center;
     justify-content: space-around;
     width: 100%;
-    padding: 1em;
     margin: 0 0 1em;
 }
 
@@ -63,7 +62,8 @@ main {
 }
 
 .btn:hover {
-    transform: scale(3);
+    transform: scale(2);
+    cursor: pointer
 }
 
 .geolocation-img {
